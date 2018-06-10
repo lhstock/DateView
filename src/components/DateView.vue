@@ -25,5 +25,7 @@ export default {
   width: 100%;
   height: 100%;
   background: #9e9c9c;
+  display: flex;
+  flex-direction: column;
 }
 </style>

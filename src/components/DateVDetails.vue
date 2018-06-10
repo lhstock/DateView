@@ -9,3 +9,10 @@ export default {
 };
 </script>
 
+<style>
+.dataV-details-wrapper {
+  flex: 2 2 auto;
+  background: wheat;
+}
+</style>
+

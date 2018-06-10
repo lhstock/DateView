@@ -3,7 +3,7 @@
     <div class="date">
       <DateView></DateView>
     </div>
-    home
+    <!-- home -->
 
   </div>
 </template>
