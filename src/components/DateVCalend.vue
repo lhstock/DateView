@@ -156,10 +156,6 @@ export default {
       obj.week = _date.getDay();
       return obj;
     },
-    // getNumForArr: function(arr) {
-    //   let num = date.getDate();
-    //   return num;
-    // },
     //计算该月要多少格;
     getNumberOfObj: function(obj) {
       let weekFirst = obj.firstDay.week;
@@ -294,7 +290,7 @@ export default {
       let firstDay = this.getFirstDay(arrDate);
       return { arrDate, endDay, firstDay };
     },
-   onScroll: function(dom, time) {
+    onScroll: function(dom, time) {
       console.log(this);
       let _this = this;
       if (!this.isAnimation) {
@@ -546,21 +542,6 @@ export default {
       arr = [0, before, cu + before];
       return arr;
     }
-
-    // useDate: function() {
-    // switch (typeof this.useDay) {
-    //   case "string":
-    //     return "aaa";
-    //     break;
-    //   case "object":
-    //
-    //     return this.useDay.toDateString();
-    //     break;
-    //   default:
-    //     break;
-    // }
-    // return new Date();
-    // }
   }
 };
 </script>
