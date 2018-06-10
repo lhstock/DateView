@@ -13,17 +13,48 @@ new Date([year,month,day])
 数组导入 就正常了；
 星期数 也要减一
 
+===C===
+跳转到指定月份
+CGoAppoint()
+跳转到上一月
+CGoLast()
+CGoNext()
 
-函数：
-获取日期Date
-    //字符串转换Date
-TranslateDateFromStr
-TranslateDateFromArr
-TranslateDateFromIndex
+===V===
+获取用户输入
+VGetDateArrForUser
 
-由Date获取
-getArrFromDate
-getArrFormDateStr
+===M===
+<!-- 指定日期初始化模型； -->
+MSkipDate
+<!-- 计算月模型应有多少格（包含上下月多余格数） -->
+MGetNumberOfObj(obj)  //obj 月模型
+<!-- 合并日历关联；主要是用于日后扩展 -->
+MCompoundCalenders
+<!-- 根据日期创建模型 -->
+MCompoundCalenders(date)
+<!-- 根据标签创建日历 type: 'cu'、'last'、'next' -->
+MCreateCalendarDateFromType(type)
+<!-- 提取模型信息 arrDate endDay firstDay -->
+MExtractObjForDate(date
 
+===o===
+<!-- DateNumber==>DateIndex -->
+_numberToIndex
+<!-- createDate -->
+_translateDateFromStr
+_translateDateFromArr
+_translateDateFromIndex
+<!-- 获取Date的数组信息 -->
+_getArrFromDate
 
-
+<!-- 获取日期str的数组信息 -->
+_getArrFromDateStr
+<!-- 获取上、下一月的某个date -->
+_getLastDate
+_getNextDate
+<!-- 获取指定日期的最后一天 -->
+_getEndDay(arrIndex)
+_getFirstDay(arrIndex);
+<!-- newArray -->
+newArray(min,max)
