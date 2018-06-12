@@ -3,31 +3,30 @@
 
     <div class="date-calend-header" @dragstart="e=>CDragstart(e)">
       <div class="last-btn" @click="CGoLast()">
-        << </div>
-          <div class="jump-btn" @change='CGoAppoint()'>
-            <input id="jump-year" type="text " :value="useData._date.getFullYear()"> 年
-            <input id="jump-month" type="text " :value="useData._date.getMonth()+1"> 月
-            <!-- <input id="jump-day" type="text " :value="cuDate.getDate()"> 日 -->
-            <!-- {{cuDate}} -->
-          </div>
-          <div class="next-btn" @click="CGoNext()">
-            >>
-          </div>
       </div>
-      <!-- @mousedown="onMousedown(DomScroll) "
+      <div class="jump-btn" @change='CGoAppoint()'>
+        <input id="jump-year" type="text " :value="useData._date.getFullYear()"> 年
+        <input id="jump-month" type="text " :value="useData._date.getMonth()+1"> 月
+        <!-- <input id="jump-day" type="text " :value="cuDate.getDate()"> 日 -->
+        <!-- {{cuDate}} -->
+      </div>
+      <div class="next-btn" @click="CGoNext()">
+      </div>
+    </div>
+    <!-- @mousedown="onMousedown(DomScroll) "
       @mouseup="onMounseup(DomScroll) "
        @scroll="MScroll(DomScroll,scrollTime) " -->
-      <div class="date-calend-body-wrapper " id="body-wrapper " :style={height:calendHeight}>
-        <!-- {{calendHeight}} -->
-        <div v-for="(item, index) in useData.calenders " :key="index " :id="index===0 ? 'beforeMonth' : (index===1 ? 'useMonth' : 'laterMonth') " class="calend-month ">
-          <div v-for="(itemDay, indexDay) in item " :key="indexDay " class="calend-day ">
-            <div>
-              {{( itemDay['beforeDate']|| itemDay['date']|| itemDay['laterDate']).getDate() }}
-            </div>
+    <div class="date-calend-body-wrapper " id="body-wrapper " :style={height:calendHeight}>
+      <!-- {{calendHeight}} -->
+      <div v-for="(item, index) in useData.calenders " :key="index " :id="index===0 ? 'beforeMonth' : (index===1 ? 'useMonth' : 'laterMonth') " class="calend-month ">
+        <div v-for="(itemDay, indexDay) in item " :key="indexDay " class="calend-day ">
+          <div>
+            {{( itemDay['beforeDate']|| itemDay['date']|| itemDay['laterDate']).getDate() }}
           </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 <script>
 export default {
@@ -60,20 +59,6 @@ export default {
     console.log(this.cuData, 4);
     // var result = x * value / 100;
     var wrapper = document.getElementById("body-wrapper");
-    // wrapper.addEventListener(
-    //   "scroll",
-    //   () => {
-    //     console.log(" scroll " + this.$refs.viewBox.scrollTop);
-    //     //以下是我自己的需求，向下滚动的时候显示“我是有底线的（类似支付宝）”
-    //     this.isScroll = this.$refs.viewBox.scrollTop > 0;
-    //   },
-    //   false
-    // );
-    // let beforeMonth = document.getElementById("beforeMonth");
-    console.log(wrapper);
-    // var cu = document.getElementById("useMonth");
-    // wrapper.scrollTop = this.cellwidth * this.useData.lastObj.weekNo;
-    // this.DomScroll.scrollTop = this.DomHeight[1];
     console.log("===end===");
   },
   methods: {
@@ -360,8 +345,8 @@ export default {
         }
       }
     },
-    CDragstart(e){
-      console.log('===start===\n',e);
+    CDragstart(e) {
+      console.log("===start===\n", e);
     }
   },
 
