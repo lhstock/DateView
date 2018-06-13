@@ -5,20 +5,20 @@
   </div>
 </template>
 <script>
-import DateVCalend from "@/components/DateVCalend";
-import DateVDetails from "@/components/DateVDetails";
+import DateVCalend from '@/components/DateVCalend'
+import DateVDetails from '@/components/DateVDetails'
 export default {
-  name: "dateView",
-  data() {
+  name: 'dateView',
+  data () {
     return {
       // today: new Date()
-    };
+    }
   },
   components: {
     DateVCalend,
     DateVDetails
   }
-};
+}
 </script>
 <style>
 .dateV-wrapper {

@@ -5,8 +5,8 @@
 </template>
 <script>
 export default {
-  name: "DateVDetails"
-};
+  name: 'DateVDetails'
+}
 </script>
 
 <style>

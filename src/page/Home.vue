@@ -8,13 +8,13 @@
   </div>
 </template>
 <script>
-import DateView from "@/components/DateView";
+import DateView from '@/components/DateView'
 export default {
-  name: "home",
+  name: 'home',
   components: {
     DateView
   }
-};
+}
 </script>
 <style>
 .date {
