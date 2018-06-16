@@ -1,25 +1,40 @@
 <template>
   <div class="dateV-calend-wrapper">
 
-    <div class="date-calend-header" @dragstart="e=>CDragstart(e)">
-      <div class="last-btn" @click="CGoLast()">
+    <div class="date-calend-header"
+      @dragstart="e=>CDragstart(e)">
+      <div class="last-btn"
+        @click="CGoLast()">
       </div>
-      <div class="jump-btn" @change='CGoAppoint()'>
-        <input id="jump-year" type="text " :value="useData._date.getFullYear()"> 年
-        <input id="jump-month" type="text " :value="useData._date.getMonth()+1"> 月
+      <div class="jump-btn"
+        @change='CGoAppoint()'>
+        <input id="jump-year"
+          type="text "
+          :value="useData._date.getFullYear()"> 年
+        <input id="jump-month"
+          type="text "
+          :value="useData._date.getMonth()+1"> 月
         <!-- <input id="jump-day" type="text " :value="cuDate.getDate()"> 日 -->
         <!-- {{cuDate}} -->
       </div>
-      <div class="next-btn" @click="CGoNext()">
+      <div class="next-btn"
+        @click="CGoNext()">
       </div>
     </div>
     <!-- @mousedown="onMousedown(DomScroll) "
-      @mouseup="onMounseup(DomScroll) "
-       @scroll="MScroll(DomScroll,scrollTime) " -->
-    <div class="date-calend-body-wrapper " id="body-wrapper " :style={height:calendHeight}>
+                  @mouseup="onMounseup(DomScroll) "
+                   @scroll="MScroll(DomScroll,scrollTime) " -->
+    <div class="date-calend-body-wrapper "
+      id="body-wrapper "
+      :style={height:calendHeight}>
       <!-- {{calendHeight}} -->
-      <div v-for="(item, index) in useData.calenders " :key="index " :id="index===0 ? 'beforeMonth' : (index===1 ? 'useMonth' : 'laterMonth') " class="calend-month ">
-        <div v-for="(itemDay, indexDay) in item " :key="indexDay " class="calend-day ">
+      <div v-for="(item, index) in useData.calenders "
+        :key="index "
+        :id="index===0 ? 'beforeMonth' : (index===1 ? 'useMonth' : 'laterMonth') "
+        class="calend-month ">
+        <div v-for="(itemDay, indexDay) in item "
+          :key="indexDay "
+          class="calend-day ">
           <div>
             {{( itemDay['beforeDate']|| itemDay['date']|| itemDay['laterDate']).getDate() }}
           </div>
@@ -28,6 +43,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   // name:
@@ -62,7 +78,7 @@ export default {
     console.log("===end===");
   },
   methods: {
-    Timeout: function() {
+    Timeout: function () {
       let _this = this;
       setTimeout(() => {
         console.log("=========设置appointDate=========", this);
@@ -71,52 +87,51 @@ export default {
         _this.MSkipDate(date);
       }, 10000);
     },
-    CGoAppoint: function() {
+    CGoAppoint: function () {
       let arrIndex = this.VGetDateArrForUser();
       let date = this._translateDateFromIndex(arrIndex);
       this.MSkipDate(date);
     },
-    CGoLast: function() {
+    CGoLast: function () {
       let date = this.useData.lastObj._date;
       this.MLoadModelForDate(date);
       console.log("golast", this.useData);
     },
-    CGoNext: function() {
+    CGoNext: function () {
       let date = this.useData.nextObj._date;
       this.MLoadModelForDate(date);
       console.log("gonext", this.useData);
     },
-    MSkipDate: function(date) {
+    MSkipDate: function (date) {
       this.appointDate = date;
       this.MLoadModelForDate(this.useDate);
     },
-    VGetDateArrForUser: function() {
+    VGetDateArrForUser: function () {
       let domYear = document.getElementById("jump-year");
       let domMonth = document.getElementById("jump-month");
       let domDay = document.getElementById("jump-day");
       let year = +domYear.value;
-      let month =
-        +(+domMonth.value >= 1 && domMonth.value << 12 && domMonth.value) || 1;
+      let month = +(+domMonth.value >= 1 && domMonth.value << 12 && domMonth.value) || 1;
       let arrIndex = [year, this._numberToIndex(month), 1];
       return arrIndex;
     },
-    _numberToIndex: function(num) {
+    _numberToIndex: function (num) {
       return num - 1;
     },
     //字符串转换Date
-    _translateDateFromStr: function(str) {
+    _translateDateFromStr: function (str) {
       return new Date(str);
     },
     //日期数组转换Date
-    _translateDateFromArr: function(arr) {
+    _translateDateFromArr: function (arr) {
       return new Date(arr);
     },
     //日期下标转换Date
-    _translateDateFromIndex: function(arr) {
+    _translateDateFromIndex: function (arr) {
       return new Date(...arr);
     },
     //获取日期数组 来源：date数据
-    _getArrFromDate: function(date) {
+    _getArrFromDate: function (date) {
       let year = date.getFullYear();
       let month = date.getMonth();
       let day = date.getDate();
@@ -124,65 +139,69 @@ export default {
     },
 
     //获取日期数组 来源：date字符串
-    _getArrFromDateStr: function(str) {
+    _getArrFromDateStr: function (str) {
       let arr = str.split("-").map(d => {
         return Number(d);
       });
       return arr;
     },
     //获取下一月Date
-    _getNextDate: function() {
+    _getNextDate: function () {
       let arr = this.useData.arrDate;
       let [year, month, day] = [...arr];
       // 注意翻到所在月份 日期需指定当前日期
       day =
-        year === this.cuData.arrDate[0] && month + 1 === this.cuData.arrDate[1]
-          ? this.cuData.arrDate[2]
-          : 1;
+        year === this.cuData.arrDate[0] && month + 1 === this.cuData.arrDate[1] ?
+          this.cuData.arrDate[2] :
+          1;
       return this._translateDateFromIndex([year, month, day]);
     },
     //获取上一月Date
-    _getLastDate: function() {
+    _getLastDate: function () {
       let arr = this.useData.arrDate;
       let [year, month, day] = [...arr];
       // 注意翻到所在月份 日期需指定当前日期
       day =
-        year === this.cuData.arrDate[0] && month - 1 === this.cuData.arrDate[1]
-          ? this.cuData.arrDate[2]
-          : 1;
+        year === this.cuData.arrDate[0] && month - 1 === this.cuData.arrDate[1] ?
+          this.cuData.arrDate[2] :
+          1;
 
       return this._translateDateFromIndex([year, month - 2, day]);
     },
-    _getEndDay: function(arrIndex) {
+    _getEndDay: function (arrIndex) {
       let [year, month, day] = [...arrIndex];
       let _date = new Date(year, month, 0);
-      let obj = { _date };
+      let obj = {
+        _date
+      };
       obj.week = _date.getDay();
       return obj;
     },
-    _getFirstDay: function(arrIndex) {
+    _getFirstDay: function (arrIndex) {
       let [year, month, day] = [...arrIndex];
       let _date = new Date(year, month - 1, 1);
-      let obj = { _date };
+      let obj = {
+        _date
+      };
       obj.week = _date.getDay();
       return obj;
     },
     //计算该月要多少格;
-    MGetNumberOfObj: function(obj) {
+    MGetNumberOfObj: function (obj) {
       let weekFirst = obj.firstDay.week;
       let weekEnd = obj.endDay.week;
       let endDay = obj.endDay;
       let numbers = weekFirst + endDay._date.getDate() + 6 - weekEnd; //% 6;
       return numbers;
     },
-    MCompoundCalenders: function() {
+    MCompoundCalenders: function () {
       this.useData.calenders = [
         // this.useData.lastObj.calender,
         this.useData.calender
         // this.useData.nextObj.calender
       ];
     },
-    MLoadModelForDate: function(date) {
+    MLoadModelForDate: function (date) {
       let obj = {};
       obj._date = date;
       this.useData = obj;
@@ -223,7 +242,7 @@ export default {
       // ];
     },
 
-    MCreateCalendarDateFromType: function(type) {
+    MCreateCalendarDateFromType: function (type) {
       let obj;
       switch (type) {
         case "cu":
@@ -240,6 +259,7 @@ export default {
         //     break;
       }
       obj.calender = getArrCalender.call(this, obj);
+
       function getArrCalender(obj) {
         let ArrCalender = this._newArray(obj.numbers);
         var [year, month, day] = obj.arrDate;
@@ -281,7 +301,7 @@ export default {
         return ArrCalender;
       }
     },
-    _newArray: function(a, b) {
+    _newArray: function (a, b) {
       let min, max;
       if (!b) {
         min = 0;
@@ -296,13 +316,17 @@ export default {
       }
       return arr;
     },
-    MExtractObjForDate: function(date) {
+    MExtractObjForDate: function (date) {
       let arrDate = this._getArrFromDate(date);
       let endDay = this._getEndDay(arrDate);
       let firstDay = this._getFirstDay(arrDate);
-      return { arrDate, endDay, firstDay };
+      return {
+        arrDate,
+        endDay,
+        firstDay
+      };
     },
-    MScroll: function(dom, time) {
+    MScroll: function (dom, time) {
       console.log(this);
       let _this = this;
       if (!this.isAnimation) {
@@ -351,7 +375,7 @@ export default {
   },
 
   computed: {
-    cuData: function() {
+    cuData: function () {
       let obj = {};
       obj._date = this.cuDate;
       obj.arrDate = this._getArrFromDate(obj._date);
@@ -359,16 +383,16 @@ export default {
       return obj;
     },
     //计算展现月份
-    useDate: function() {
+    useDate: function () {
       let date = this.appointDate || this.cuDate;
       return date;
     },
-    calendHeight: function() {
+    calendHeight: function () {
       // return "calc(100vw / 7 * 5)";
       // ~"100% - @{diff}"
       return `calc(100vw / 7 * ${this.useData.weekNo})`;
     },
-    cellwidth: function() {
+    cellwidth: function () {
       let w = window,
         d = document,
         e = d.documentElement,
@@ -378,10 +402,10 @@ export default {
       let s = 100 / 7 * x / 100;
       return s;
     },
-    DomScroll: function() {
+    DomScroll: function () {
       return document.getElementById("body-wrapper");
     },
-    DomHeight: function() {
+    DomHeight: function () {
       let arr = [];
       let before = this.cellwidth * this.useData.lastObj.weekNo;
       let cu = this.cellwidth * this.useData.weekNo;
@@ -399,6 +423,7 @@ export default {
   /* height: 100%; */
   /* flex: 1 1 auto; */
 }
+
 .date-calend-header {
   height: 100px;
   width: 100%;
@@ -408,6 +433,7 @@ export default {
   flex-direction: row;
   background: red;
 }
+
 .last-btn,
 .next-btn {
   width: 100px;
@@ -415,6 +441,7 @@ export default {
   text-align: center;
   line-height: 100px;
 }
+
 .jump-btn {
   flex: 1 1 auto;
   display: flex;
@@ -422,23 +449,28 @@ export default {
   flex-direction: row;
   align-items: center;
 }
+
 .jump-btn > input {
   width: 50px;
 }
+
 .date-calend-body-wrapper {
   overflow: auto;
   margin-top: 100px;
 }
+
 .calend-month {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
+
 .calend-day {
   width: calc(100vw / 7);
   height: calc(100vw / 7);
   display: flex;
 }
+
 .calend-day div {
   display: flex;
   justify-content: center;
