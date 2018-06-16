@@ -24,7 +24,7 @@
       <div v-for="(item, index) in useData.calenders " :key="index " :id="index===0 ? 'beforeMonth' : (index===1 ? 'useMonth' : 'laterMonth') " class="calend-month ">
         <div v-for="(itemDay, indexDay) in item " :key="indexDay " class="calend-day ">
           <div>
-            {{( itemDay['beforeDate']|| itemDay['date']|| itemDay['laterDate']).getDate() }}
+              {{( itemDay['beforeDate']|| itemDay['date']|| itemDay['laterDate']).getDate() }}
           </div>
         </div>
       </div>
