@@ -21,7 +21,7 @@
       </div>
       <div class="next-btn"
         @click="CGoNext()">
-        &#62; >>>>>>> master
+        &#62;
       </div>
     </div>
     <!-- @mousedown="onMousedown(DomScroll) "
