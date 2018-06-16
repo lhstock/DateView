@@ -12,10 +12,10 @@ export default new Router({
     //   name: 'HelloWorld',
     //   component: HelloWorld
     // }
-{
+    {
       path: '/',
       name: 'home',
-      component:Home
+      component: Home,
     }
   ]
 })

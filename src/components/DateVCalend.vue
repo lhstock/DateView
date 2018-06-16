@@ -1,10 +1,12 @@
 <template>
   <div class="dateV-calend-wrapper">
-
+    <!-- <div></div> -->
+    <!-- calend-header -->
     <div class="date-calend-header"
       @dragstart="e=>CDragstart(e)">
       <div class="last-btn"
         @click="CGoLast()">
+        &#60;
       </div>
       <div class="jump-btn"
         @change='CGoAppoint()'>
@@ -19,6 +21,7 @@
       </div>
       <div class="next-btn"
         @click="CGoNext()">
+        &#62; >>>>>>> master
       </div>
     </div>
     <!-- @mousedown="onMousedown(DomScroll) "
@@ -47,7 +50,7 @@
 <script>
 export default {
   // name:
-  data() {
+  data () {
     return {
       cuDate: new Date(),
       appointDate: undefined,
@@ -56,185 +59,179 @@ export default {
       isAnimation: false,
       scrollTime: 10
       // calendHeight:'calc(100vw / 7 * )'
-    };
+    }
   },
-  beforeCreate() {
-    console.log(this.cuData, 1);
+  beforeCreate () {
+    console.log(this.cuData, 1)
   },
-  created() {
-    let _this = this;
-    console.log(this.cuData, 2);
-    this.MLoadModelForDate(this.cuDate);
+  created () {
+    console.log(this.cuData, 2)
+    this.MLoadModelForDate(this.cuDate)
     // this.Timeout();
   },
-  beforeMount() {
-    console.log(this.cuData, 3);
-    console.log("a");
+  beforeMount () {
+    console.log(this.cuData, 3)
+    console.log('a')
   },
-  mounted() {
-    console.log(this.cuData, 4);
+  mounted () {
+    console.log(this.cuData, 4)
     // var result = x * value / 100;
-    var wrapper = document.getElementById("body-wrapper");
-    console.log("===end===");
+    console.log('===end===')
   },
   methods: {
     Timeout: function () {
-      let _this = this;
+      let _this = this
       setTimeout(() => {
-        console.log("=========设置appointDate=========", this);
-        let string = "2018-9-10";
-        var date = _this._translateDateFromStr(string);
-        _this.MSkipDate(date);
-      }, 10000);
+        console.log('=========设置appointDate=========', this)
+        let string = '2018-9-10'
+        var date = _this._translateDateFromStr(string)
+        _this.MSkipDate(date)
+      }, 10000)
     },
     CGoAppoint: function () {
-      let arrIndex = this.VGetDateArrForUser();
-      let date = this._translateDateFromIndex(arrIndex);
-      this.MSkipDate(date);
+      let arrIndex = this.VGetDateArrForUser()
+      let date = this._translateDateFromIndex(arrIndex)
+      this.MSkipDate(date)
     },
     CGoLast: function () {
-      let date = this.useData.lastObj._date;
-      this.MLoadModelForDate(date);
-      console.log("golast", this.useData);
+      let date = this.useData.lastObj._date
+      this.MLoadModelForDate(date)
+      console.log('golast', this.useData)
     },
     CGoNext: function () {
-      let date = this.useData.nextObj._date;
-      this.MLoadModelForDate(date);
-      console.log("gonext", this.useData);
+      let date = this.useData.nextObj._date
+      this.MLoadModelForDate(date)
+      console.log('gonext', this.useData)
     },
     MSkipDate: function (date) {
-      this.appointDate = date;
-      this.MLoadModelForDate(this.useDate);
+      this.appointDate = date
+      this.MLoadModelForDate(this.useDate)
     },
     VGetDateArrForUser: function () {
-      let domYear = document.getElementById("jump-year");
-      let domMonth = document.getElementById("jump-month");
-      let domDay = document.getElementById("jump-day");
-      let year = +domYear.value;
-      let month = +(+domMonth.value >= 1 && domMonth.value << 12 && domMonth.value) || 1;
-      let arrIndex = [year, this._numberToIndex(month), 1];
-      return arrIndex;
+      let domYear = document.getElementById('jump-year')
+      let domMonth = document.getElementById('jump-month')
+      let year = +domYear.value
+      let month =
+        +(+domMonth.value >= 1 && domMonth.value << 12 && domMonth.value) || 1
+      let arrIndex = [year, this._numberToIndex(month), 1]
+      return arrIndex
     },
     _numberToIndex: function (num) {
-      return num - 1;
+      return num - 1
     },
-    //字符串转换Date
+    // 字符串转换Date
     _translateDateFromStr: function (str) {
-      return new Date(str);
+      return new Date(str)
     },
-    //日期数组转换Date
+    // 日期数组转换Date
     _translateDateFromArr: function (arr) {
-      return new Date(arr);
+      return new Date(arr)
     },
-    //日期下标转换Date
+    // 日期下标转换Date
     _translateDateFromIndex: function (arr) {
-      return new Date(...arr);
+      return new Date(...arr)
     },
-    //获取日期数组 来源：date数据
+    // 获取日期数组 来源：date数据
     _getArrFromDate: function (date) {
-      let year = date.getFullYear();
-      let month = date.getMonth();
-      let day = date.getDate();
-      return [year, month + 1, day];
+      let year = date.getFullYear()
+      let month = date.getMonth()
+      let day = date.getDate()
+      return [year, month + 1, day]
     },
 
-    //获取日期数组 来源：date字符串
+    // 获取日期数组 来源：date字符串
     _getArrFromDateStr: function (str) {
-      let arr = str.split("-").map(d => {
-        return Number(d);
-      });
-      return arr;
+      let arr = str.split('-').map(d => {
+        return Number(d)
+      })
+      return arr
     },
-    //获取下一月Date
+    // 获取下一月Date
     _getNextDate: function () {
-      let arr = this.useData.arrDate;
-      let [year, month, day] = [...arr];
+      let arr = this.useData.arrDate
+      let [year, month, day] = [...arr]
       // 注意翻到所在月份 日期需指定当前日期
       day =
-        year === this.cuData.arrDate[0] && month + 1 === this.cuData.arrDate[1] ?
-          this.cuData.arrDate[2] :
-          1;
-      return this._translateDateFromIndex([year, month, day]);
+        year === this.cuData.arrDate[0] && month + 1 === this.cuData.arrDate[1]
+          ? this.cuData.arrDate[2]
+          : 1
+      return this._translateDateFromIndex([year, month, day])
     },
-    //获取上一月Date
+    // 获取上一月Date
     _getLastDate: function () {
-      let arr = this.useData.arrDate;
-      let [year, month, day] = [...arr];
+      let arr = this.useData.arrDate
+      let [year, month, day] = [...arr]
       // 注意翻到所在月份 日期需指定当前日期
       day =
-        year === this.cuData.arrDate[0] && month - 1 === this.cuData.arrDate[1] ?
-          this.cuData.arrDate[2] :
-          1;
+        year === this.cuData.arrDate[0] && month - 1 === this.cuData.arrDate[1]
+          ? this.cuData.arrDate[2]
+          : 1
 
-      return this._translateDateFromIndex([year, month - 2, day]);
+      return this._translateDateFromIndex([year, month - 2, day])
     },
     _getEndDay: function (arrIndex) {
-      let [year, month, day] = [...arrIndex];
-      let _date = new Date(year, month, 0);
-      let obj = {
-        _date
-      };
-      obj.week = _date.getDay();
-      return obj;
+      let [year, month] = [...arrIndex]
+      let _date = new Date(year, month, 0)
+      let obj = { _date }
+      obj.week = _date.getDay()
+      return obj
     },
     _getFirstDay: function (arrIndex) {
-      let [year, month, day] = [...arrIndex];
-      let _date = new Date(year, month - 1, 1);
-      let obj = {
-        _date
-      };
-      obj.week = _date.getDay();
-      return obj;
+      let [year, month] = [...arrIndex]
+      let _date = new Date(year, month - 1, 1)
+      let obj = { _date }
+      obj.week = _date.getDay()
+      return obj
     },
-    //计算该月要多少格;
+    // 计算该月要多少格;
     MGetNumberOfObj: function (obj) {
-      let weekFirst = obj.firstDay.week;
-      let weekEnd = obj.endDay.week;
-      let endDay = obj.endDay;
-      let numbers = weekFirst + endDay._date.getDate() + 6 - weekEnd; //% 6;
-      return numbers;
+      let weekFirst = obj.firstDay.week
+      let weekEnd = obj.endDay.week
+      let endDay = obj.endDay
+      let numbers = weekFirst + endDay._date.getDate() + 6 - weekEnd // % 6;
+      return numbers
     },
     MCompoundCalenders: function () {
       this.useData.calenders = [
         // this.useData.lastObj.calender,
         this.useData.calender
         // this.useData.nextObj.calender
-      ];
+      ]
     },
     MLoadModelForDate: function (date) {
-      let obj = {};
-      obj._date = date;
-      this.useData = obj;
-      //添加最后一天 第一天  日期数组
+      let obj = {}
+      obj._date = date
+      this.useData = obj
+      // 添加最后一天 第一天  日期数组
       // obj = { ...obj, ...this.MExtractObjForDate(date) };
-      Object.assign(obj, this.MExtractObjForDate(date));
-      obj.numbers = this.MGetNumberOfObj(obj);
-      obj.weekNo = obj.numbers / 7;
+      Object.assign(obj, this.MExtractObjForDate(date))
+      obj.numbers = this.MGetNumberOfObj(obj)
+      obj.weekNo = obj.numbers / 7
 
-      //下一月
-      let nextObj = {};
-      nextObj._date = this._getNextDate(obj.arrDate);
-      //添加最后一天 第一天 日期数组
+      // 下一月
+      let nextObj = {}
+      nextObj._date = this._getNextDate(obj.arrDate)
+      // 添加最后一天 第一天 日期数组
       // nextObj = { ...nextObj, ...this.MExtractObjForDate(nextObj._date) };
-      Object.assign(nextObj, this.MExtractObjForDate(nextObj._date));
-      nextObj.numbers = this.MGetNumberOfObj(nextObj);
-      nextObj.weekNo = nextObj.numbers / 7;
-      obj.nextObj = nextObj;
+      Object.assign(nextObj, this.MExtractObjForDate(nextObj._date))
+      nextObj.numbers = this.MGetNumberOfObj(nextObj)
+      nextObj.weekNo = nextObj.numbers / 7
+      obj.nextObj = nextObj
 
-      //上一月
-      let lastObj = {};
-      lastObj._date = this._getLastDate(obj.arrDate);
-      //添加最后一天 第一天 日期数组
+      // 上一月
+      let lastObj = {}
+      lastObj._date = this._getLastDate(obj.arrDate)
+      // 添加最后一天 第一天 日期数组
       // lastObj = { ...lastObj, ...this.MExtractObjForDate(lastObj._date) };
-      Object.assign(lastObj, this.MExtractObjForDate(lastObj._date));
-      lastObj.numbers = this.MGetNumberOfObj(lastObj);
-      lastObj.weekNo = lastObj.numbers / 7;
-      obj.lastObj = lastObj;
-      obj.weekNumbers = obj.weekNo + obj.nextObj.weekNo + obj.lastObj.weekNo;
-      this.MCreateCalendarDateFromType("cu");
-      this.MCreateCalendarDateFromType("next");
-      this.MCreateCalendarDateFromType("last");
-      this.MCompoundCalenders();
+      Object.assign(lastObj, this.MExtractObjForDate(lastObj._date))
+      lastObj.numbers = this.MGetNumberOfObj(lastObj)
+      lastObj.weekNo = lastObj.numbers / 7
+      obj.lastObj = lastObj
+      obj.weekNumbers = obj.weekNo + obj.nextObj.weekNo + obj.lastObj.weekNo
+      this.MCreateCalendarDateFromType('cu')
+      this.MCreateCalendarDateFromType('next')
+      this.MCreateCalendarDateFromType('last')
+      this.MCompoundCalenders()
       // obj.calenders = [
       // obj.lastObj.calender,
       // obj.calender
@@ -243,39 +240,38 @@ export default {
     },
 
     MCreateCalendarDateFromType: function (type) {
-      let obj;
+      let obj
       switch (type) {
-        case "cu":
-          obj = this.useData;
-          break;
-        case "next":
-          obj = this.useData.nextObj;
+        case 'cu':
+          obj = this.useData
+          break
+        case 'next':
+          obj = this.useData.nextObj
 
-          break;
-        case "last":
-          obj = this.useData.lastObj;
-          break;
+          break
+        case 'last':
+          obj = this.useData.lastObj
+          break
         //   default:
         //     break;
       }
-      obj.calender = getArrCalender.call(this, obj);
-
-      function getArrCalender(obj) {
-        let ArrCalender = this._newArray(obj.numbers);
-        var [year, month, day] = obj.arrDate;
+      obj.calender = getArrCalender.call(this, obj)
+      function getArrCalender (obj) {
+        let ArrCalender = this._newArray(obj.numbers)
+        var [year, month] = obj.arrDate
         ArrCalender = ArrCalender.map((d, i) => {
           // 月前空白
           if (i < obj.firstDay.week) {
-            d = {};
+            d = {}
             // d.beforeDate = new Date(year, month - 1, i - obj.firstDay.week);
             d.beforeDate = this._translateDateFromIndex([
               year,
               month - 1,
               i + 1 - obj.firstDay.week
-            ]);
+            ])
           } else if (i >= obj.firstDay.week + obj.endDay._date.getDate()) {
-            d = {};
-            let num = i - (obj.firstDay.week + obj.endDay._date.getDate());
+            d = {}
+            let num = i - (obj.firstDay.week + obj.endDay._date.getDate())
             // d.laterDate = new Date(
             //   year,
             //   month - 1,
@@ -286,135 +282,88 @@ export default {
               month - 1,
 
               num + 1 + obj.endDay._date.getDate()
-            ]);
+            ])
           } else {
-            d = {};
+            d = {}
             d.date = this._translateDateFromIndex([
               year,
               month - 1,
               i - obj.firstDay.week + 1
-            ]);
+            ])
           }
-          return d;
-        });
+          return d
+        })
 
-        return ArrCalender;
+        return ArrCalender
       }
     },
     _newArray: function (a, b) {
-      let min, max;
+      let min, max
       if (!b) {
-        min = 0;
-        max = a;
+        min = 0
+        max = a
       } else {
-        min = a;
-        max = b;
+        min = a
+        max = b
       }
-      var arr = [];
+      var arr = []
       for (let index = min; index < max; index++) {
-        arr.push(index);
+        arr.push(index)
       }
-      return arr;
+      return arr
     },
     MExtractObjForDate: function (date) {
-      let arrDate = this._getArrFromDate(date);
-      let endDay = this._getEndDay(arrDate);
-      let firstDay = this._getFirstDay(arrDate);
-      return {
-        arrDate,
-        endDay,
-        firstDay
-      };
+      let arrDate = this._getArrFromDate(date)
+      let endDay = this._getEndDay(arrDate)
+      let firstDay = this._getFirstDay(arrDate)
+      return { arrDate, endDay, firstDay }
     },
-    MScroll: function (dom, time) {
-      console.log(this);
-      let _this = this;
-      if (!this.isAnimation) {
-        console.log("bool");
-      } else {
-        console.log("0000");
-        if (this.oldScrollNum <= _this.DomHeight[1] / 2) {
-          let newHeight = 0;
-          let margin = Math.abs(newHeight - oldHeight);
-          let cellMargin = margin / 100;
-          let plusAndMinus = newHeight - oldHeight < 0 ? -1 : 1;
-          timer2 = setInterval(() => {
-            i++;
-            dom.scrollTop = oldHeight + i * cellMargin * plusAndMinus;
-            i > 100 && clearInterval(timer2);
-          }, 1);
-        } else if (
-          dom.scrollTop >=
-          _this.DomHeight[1] + (_this.DomHeight[2] - _this.DomHeight[1]) / 2
-        ) {
-          let newHeight = _this.DomHeight[2];
-          let margin = Math.abs(newHeight - oldHeight);
-          let cellMargin = margin / 100;
-          let plusAndMinus = newHeight - oldHeight < 0 ? -1 : 1;
-          timer2 = setInterval(() => {
-            i++;
-            dom.scrollTop = oldHeight + i * cellMargin * plusAndMinus;
-            i > 100 && clearInterval(timer2);
-          }, 1);
-        } else {
-          let newHeight = _this.DomHeight[1];
-          let margin = Math.abs(newHeight - oldHeight);
-          let cellMargin = margin / 100;
-          let plusAndMinus = newHeight - oldHeight < 0 ? -1 : 1;
-          timer2 = setInterval(() => {
-            i++;
-            dom.scrollTop = oldHeight + i * cellMargin * plusAndMinus;
-            i > 100 && clearInterval(timer2);
-          }, 1);
-        }
-      }
-    },
-    CDragstart(e) {
-      console.log("===start===\n", e);
+    CDragstart (e) {
+      console.log('===start===\n', e)
     }
   },
 
   computed: {
     cuData: function () {
-      let obj = {};
-      obj._date = this.cuDate;
-      obj.arrDate = this._getArrFromDate(obj._date);
+      let obj = {}
+      obj._date = this.cuDate
+      obj.arrDate = this._getArrFromDate(obj._date)
 
-      return obj;
+      return obj
     },
-    //计算展现月份
+    // 计算展现月份
     useDate: function () {
-      let date = this.appointDate || this.cuDate;
-      return date;
+      let date = this.appointDate || this.cuDate
+      return date
     },
     calendHeight: function () {
       // return "calc(100vw / 7 * 5)";
       // ~"100% - @{diff}"
-      return `calc(100vw / 7 * ${this.useData.weekNo})`;
+      return `calc(100vw / 7 * ${this.useData.weekNo})`
     },
     cellwidth: function () {
-      let w = window,
-        d = document,
-        e = d.documentElement,
-        g = d.getElementsByTagName("body")[0],
-        x = w.innerWidth || e.clientWidth || g.clientWidth,
-        y = w.innerHeight || e.clientHeight || g.clientHeight;
-      let s = 100 / 7 * x / 100;
-      return s;
+      let w = window
+      let d = document
+      let e = d.documentElement
+      let g = d.getElementsByTagName('body')[0]
+      let x = w.innerWidth || e.clientWidth || g.clientWidth
+      // let y = w.innerHeight || e.clientHeight || g.clientHeight
+      let s = 100 / 7 * x / 100
+      return s
     },
     DomScroll: function () {
-      return document.getElementById("body-wrapper");
+      return document.getElementById('body-wrapper')
     },
     DomHeight: function () {
-      let arr = [];
-      let before = this.cellwidth * this.useData.lastObj.weekNo;
-      let cu = this.cellwidth * this.useData.weekNo;
-      let later = this.cellwidth * this.useData.nextObj.weekNo;
-      arr = [0, before, cu + before];
-      return arr;
+      let arr = []
+      let before = this.cellwidth * this.useData.lastObj.weekNo
+      let cu = this.cellwidth * this.useData.weekNo
+      // let later = this.cellwidth * this.useData.nextObj.weekNo
+      arr = [0, before, cu + before]
+      return arr
     }
   }
-};
+}
 </script>
 
 <style>
