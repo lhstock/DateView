@@ -1,36 +1,52 @@
 <template>
   <div class="dateV-calend-wrapper">
-<!-- <div></div> -->
-      <!-- calend-header -->
-    <div class="date-calend-header" @dragstart="e=>CDragstart(e)">
-               <div class="last-btn" @click="CGoLast()">
+    <!-- <div></div> -->
+    <!-- calend-header -->
+    <div class="date-calend-header"
+      @dragstart="e=>CDragstart(e)">
+      <div class="last-btn"
+        @click="CGoLast()">
         &#60;
       </div>
-      <div class="jump-btn" @change='CGoAppoint()'>
-        <input id="jump-year" type="text " :value="useData._date.getFullYear()"> 年
-        <input id="jump-month" type="text " :value="useData._date.getMonth()+1"> 月
+      <div class="jump-btn"
+        @change='CGoAppoint()'>
+        <input id="jump-year"
+          type="text "
+          :value="useData._date.getFullYear()"> 年
+        <input id="jump-month"
+          type="text "
+          :value="useData._date.getMonth()+1"> 月
         <!-- <input id="jump-day" type="text " :value="cuDate.getDate()"> 日 -->
         <!-- {{cuDate}} -->
       </div>
-      <div class="next-btn" @click="CGoNext()">
+      <div class="next-btn"
+        @click="CGoNext()">
         &#62;
       </div>
     </div>
     <!-- @mousedown="onMousedown(DomScroll) "
-      @mouseup="onMounseup(DomScroll) "
-       @scroll="MScroll(DomScroll,scrollTime) " -->
-    <div class="date-calend-body-wrapper " id="body-wrapper " :style={height:calendHeight}>
+                  @mouseup="onMounseup(DomScroll) "
+                   @scroll="MScroll(DomScroll,scrollTime) " -->
+    <div class="date-calend-body-wrapper "
+      id="body-wrapper "
+      :style={height:calendHeight}>
       <!-- {{calendHeight}} -->
-      <div v-for="(item, index) in useData.calenders " :key="index " :id="index===0 ? 'beforeMonth' : (index===1 ? 'useMonth' : 'laterMonth') " class="calend-month ">
-        <div v-for="(itemDay, indexDay) in item " :key="indexDay " class="calend-day ">
+      <div v-for="(item, index) in useData.calenders "
+        :key="index "
+        :id="index===0 ? 'beforeMonth' : (index===1 ? 'useMonth' : 'laterMonth') "
+        class="calend-month ">
+        <div v-for="(itemDay, indexDay) in item "
+          :key="indexDay "
+          class="calend-day ">
           <div>
-              {{( itemDay['beforeDate']|| itemDay['date']|| itemDay['laterDate']).getDate() }}
+            {{( itemDay['beforeDate']|| itemDay['date']|| itemDay['laterDate']).getDate() }}
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
 export default {
   // name:
@@ -356,6 +372,7 @@ export default {
   /* height: 100%; */
   /* flex: 1 1 auto; */
 }
+
 .date-calend-header {
   height: 100px;
   width: 100%;
@@ -365,6 +382,7 @@ export default {
   flex-direction: row;
   background: red;
 }
+
 .last-btn,
 .next-btn {
   width: 100px;
@@ -372,6 +390,7 @@ export default {
   text-align: center;
   line-height: 100px;
 }
+
 .jump-btn {
   flex: 1 1 auto;
   display: flex;
@@ -379,23 +398,28 @@ export default {
   flex-direction: row;
   align-items: center;
 }
+
 .jump-btn > input {
   width: 50px;
 }
+
 .date-calend-body-wrapper {
   overflow: auto;
   margin-top: 100px;
 }
+
 .calend-month {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
+
 .calend-day {
   width: calc(100vw / 7);
   height: calc(100vw / 7);
   display: flex;
 }
+
 .calend-day div {
   display: flex;
   justify-content: center;
