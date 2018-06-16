@@ -24,8 +24,9 @@ export default {
 .dateV-wrapper {
   width: 100%;
   height: 100%;
-  background: #9e9c9c;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
+  user-select: none;
 }
 </style>

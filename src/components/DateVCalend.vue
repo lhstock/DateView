@@ -35,10 +35,19 @@
         :key="index "
         :id="index===0 ? 'beforeMonth' : (index===1 ? 'useMonth' : 'laterMonth') "
         class="calend-month ">
+        <!-- {'today':} -->
         <div v-for="(itemDay, indexDay) in item "
           :key="indexDay "
           class="calend-day ">
-          <div>
+          <div :class="[
+          {'before-month':itemDay.beforeDate},
+          {'cu-month':itemDay.date},
+          {'later-month':itemDay.laterDate},
+          {'active':indexDay === numIndexOfSelect},
+          {'today': isToday(Object.values(itemDay)[0])}
+          ]"
+            @click="CClick(itemDay)">
+
             {{( itemDay['beforeDate']|| itemDay['date']|| itemDay['laterDate']).getDate() }}
           </div>
         </div>
@@ -55,34 +64,26 @@ export default {
       cuDate: new Date(),
       appointDate: undefined,
       useData: null,
+      selectDate: new Date(),
       timer: null,
       isAnimation: false,
-      scrollTime: 10
-      // calendHeight:'calc(100vw / 7 * )'
+      scrollTime: 10,
+      DAYTIME: 1000 * 60 * 60 * 24
     }
   },
   beforeCreate () {
-    console.log(this.cuData, 1)
   },
   created () {
-    console.log(this.cuData, 2)
     this.MLoadModelForDate(this.cuDate)
-    // this.Timeout();
   },
   beforeMount () {
-    console.log(this.cuData, 3)
-    console.log('a')
   },
   mounted () {
-    console.log(this.cuData, 4)
-    // var result = x * value / 100;
-    console.log('===end===')
   },
   methods: {
     Timeout: function () {
       let _this = this
       setTimeout(() => {
-        console.log('=========设置appointDate=========', this)
         let string = '2018-9-10'
         var date = _this._translateDateFromStr(string)
         _this.MSkipDate(date)
@@ -96,12 +97,10 @@ export default {
     CGoLast: function () {
       let date = this.useData.lastObj._date
       this.MLoadModelForDate(date)
-      console.log('golast', this.useData)
     },
     CGoNext: function () {
       let date = this.useData.nextObj._date
       this.MLoadModelForDate(date)
-      console.log('gonext', this.useData)
     },
     MSkipDate: function (date) {
       this.appointDate = date
@@ -212,7 +211,6 @@ export default {
       let nextObj = {}
       nextObj._date = this._getNextDate(obj.arrDate)
       // 添加最后一天 第一天 日期数组
-      // nextObj = { ...nextObj, ...this.MExtractObjForDate(nextObj._date) };
       Object.assign(nextObj, this.MExtractObjForDate(nextObj._date))
       nextObj.numbers = this.MGetNumberOfObj(nextObj)
       nextObj.weekNo = nextObj.numbers / 7
@@ -222,7 +220,6 @@ export default {
       let lastObj = {}
       lastObj._date = this._getLastDate(obj.arrDate)
       // 添加最后一天 第一天 日期数组
-      // lastObj = { ...lastObj, ...this.MExtractObjForDate(lastObj._date) };
       Object.assign(lastObj, this.MExtractObjForDate(lastObj._date))
       lastObj.numbers = this.MGetNumberOfObj(lastObj)
       lastObj.weekNo = lastObj.numbers / 7
@@ -232,11 +229,7 @@ export default {
       this.MCreateCalendarDateFromType('next')
       this.MCreateCalendarDateFromType('last')
       this.MCompoundCalenders()
-      // obj.calenders = [
-      // obj.lastObj.calender,
-      // obj.calender
-      // obj.nextObj.calender
-      // ];
+      console.log(this.useData)
     },
 
     MCreateCalendarDateFromType: function (type) {
@@ -252,8 +245,9 @@ export default {
         case 'last':
           obj = this.useData.lastObj
           break
-        //   default:
-        //     break;
+        default:
+          obj = this.useData
+          break
       }
       obj.calender = getArrCalender.call(this, obj)
       function getArrCalender (obj) {
@@ -263,7 +257,6 @@ export default {
           // 月前空白
           if (i < obj.firstDay.week) {
             d = {}
-            // d.beforeDate = new Date(year, month - 1, i - obj.firstDay.week);
             d.beforeDate = this._translateDateFromIndex([
               year,
               month - 1,
@@ -272,11 +265,6 @@ export default {
           } else if (i >= obj.firstDay.week + obj.endDay._date.getDate()) {
             d = {}
             let num = i - (obj.firstDay.week + obj.endDay._date.getDate())
-            // d.laterDate = new Date(
-            //   year,
-            //   month - 1,
-            //   num + obj.endDay._date.getDate()
-            // );
             d.laterDate = this._translateDateFromIndex([
               year,
               month - 1,
@@ -312,6 +300,7 @@ export default {
       }
       return arr
     },
+
     MExtractObjForDate: function (date) {
       let arrDate = this._getArrFromDate(date)
       let endDay = this._getEndDay(arrDate)
@@ -319,11 +308,29 @@ export default {
       return { arrDate, endDay, firstDay }
     },
     CDragstart (e) {
-      console.log('===start===\n', e)
+    },
+    CClick (data) {
+      console.log(data)
+      this.selectDate = Object.values(data)[0]
+    },
+    isToday (date) {
+      return parseInt((new Date().setHours(0, 0, 0, 0) - date) / this.DAYTIME) + '' === '0'
     }
   },
 
   computed: {
+    numIndexOfSelect: function () {
+      let index = 0
+      this.useData.calender.forEach((date, i) => {
+        let time = Object.values(date)[0] - this.selectDate.setHours(0, 0, 0, 0)
+        // console.log(parseInt(time / daytime))
+        console.log(time)
+        index = date.beforeDate ? i + 1 : index
+        index = parseInt(time / this.DAYTIME) === 0 ? i : index
+      })
+      console.log(index)
+      return index
+    },
     cuData: function () {
       let obj = {}
       obj._date = this.cuDate
@@ -424,7 +431,22 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #ffffff;
+  border-bottom: 1px solid #978e8e;
   flex: 1 1 auto;
+}
+.before-month,
+.later-month {
+  /* background: #e6e6e6; */
+  color: #d9d9d9;
+}
+.cu-month {
+  /* background: #ec57c8; */
+  color: #000000;
+}
+.active {
+  background: #00daf9;
+}
+.today {
+  color: red;
 }
 </style>
