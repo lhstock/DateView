@@ -1,0 +1,8 @@
+// $baseLineHeight:        1.5 !default;
+// $colors: red;
+:root {
+  --colors: red;
+}
+*{
+  background: var(--colors);
+}

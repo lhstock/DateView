@@ -58,3 +58,14 @@ _getEndDay(arrIndex)
 _getFirstDay(arrIndex);
 <!-- newArray -->
 newArray(min,max)
+
+class:
+.calend-month
+  .calend-day
+    .before-month
+    .cu-month
+    .later-month
+
+.today
+.active
+.

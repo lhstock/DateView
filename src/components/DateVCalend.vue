@@ -1,6 +1,5 @@
 <template>
   <div class="dateV-calend-wrapper">
-    <!-- <div></div> -->
     <!-- calend-header -->
     <div class="date-calend-header"
       @dragstart="e=>CDragstart(e)">
@@ -16,69 +15,63 @@
         <input id="jump-month"
           type="text "
           :value="useData._date.getMonth()+1"> 月
-        <!-- <input id="jump-day" type="text " :value="cuDate.getDate()"> 日 -->
-        <!-- {{cuDate}} -->
       </div>
       <div class="next-btn"
         @click="CGoNext()">
         &#62;
       </div>
     </div>
-    <!-- @mousedown="onMousedown(DomScroll) "
-                  @mouseup="onMounseup(DomScroll) "
-                   @scroll="MScroll(DomScroll,scrollTime) " -->
+    <!-- calend-header END -->
+
+    <!-- calend-body -->
     <div class="date-calend-body-wrapper "
       id="body-wrapper "
       :style={height:calendHeight}>
-      <!-- {{calendHeight}} -->
+      <!-- month -->
       <div v-for="(item, index) in useData.calenders "
         :key="index "
-        :id="index===0 ? 'beforeMonth' : (index===1 ? 'useMonth' : 'laterMonth') "
         class="calend-month ">
-        <!-- {'today':} -->
+        <!-- day -->
         <div v-for="(itemDay, indexDay) in item "
           :key="indexDay "
           class="calend-day ">
-          <div :class="[
-          {'before-month':itemDay.beforeDate},
-          {'cu-month':itemDay.date},
-          {'later-month':itemDay.laterDate},
-          {'active':indexDay === numIndexOfSelect},
-          {'today': isToday(Object.values(itemDay)[0])}
-          ]"
+          <div :class="arrclass(itemDay)"
             @click="CClick(itemDay)">
-
-            {{( itemDay['beforeDate']|| itemDay['date']|| itemDay['laterDate']).getDate() }}
+            {{itemDay.date.getDate()}}
           </div>
         </div>
+        <!-- day END -->
       </div>
+      <!-- month END -->
     </div>
+    <!-- calend-body  END -->
   </div>
 </template>
 
 <script>
+// import '../assets/css/test.scss'
 export default {
   // name:
-  data () {
+  data() {
     return {
-      cuDate: new Date(),
+      cuDate: this._clearHours(new Date()),
       appointDate: undefined,
       useData: null,
-      selectDate: new Date(),
+      selectDate: this._clearHours(new Date()),
       timer: null,
       isAnimation: false,
       scrollTime: 10,
       DAYTIME: 1000 * 60 * 60 * 24
     }
   },
-  beforeCreate () {
+  beforeCreate() {
   },
-  created () {
+  created() {
     this.MLoadModelForDate(this.cuDate)
   },
-  beforeMount () {
+  beforeMount() {
   },
-  mounted () {
+  mounted() {
   },
   methods: {
     Timeout: function () {
@@ -106,6 +99,7 @@ export default {
       this.appointDate = date
       this.MLoadModelForDate(this.useDate)
     },
+    // 用户输入转ArrDate
     VGetDateArrForUser: function () {
       let domYear = document.getElementById('jump-year')
       let domMonth = document.getElementById('jump-month')
@@ -115,6 +109,7 @@ export default {
       let arrIndex = [year, this._numberToIndex(month), 1]
       return arrIndex
     },
+    // Date日期转index
     _numberToIndex: function (num) {
       return num - 1
     },
@@ -191,99 +186,119 @@ export default {
       return numbers
     },
     MCompoundCalenders: function () {
-      this.useData.calenders = [
-        // this.useData.lastObj.calender,
-        this.useData.calender
-        // this.useData.nextObj.calender
-      ]
+      // this.useData.calenders = [
+      //   // this.useData.lastObj.calender,
+      //   this.useData.calender
+      //   // this.useData.nextObj.calender
+      // ]
+      this.$set(this.useData, 'calenders', [this.useData.calender])
     },
-    MLoadModelForDate: function (date) {
+    MCreateMonthData: function (date) {
       let obj = {}
       obj._date = date
-      this.useData = obj
-      // 添加最后一天 第一天  日期数组
-      // obj = { ...obj, ...this.MExtractObjForDate(date) };
-      Object.assign(obj, this.MExtractObjForDate(date))
+      Object.assign(obj, this.MExtractObjForDate(obj._date))
       obj.numbers = this.MGetNumberOfObj(obj)
       obj.weekNo = obj.numbers / 7
+      return obj
+    },
+    MLoadModelForDate: function (date) {
+      // 当月
+      let obj = this.MCreateMonthData(date)
+      this.useData = obj
+      this.selectDate = this._translateDateFromArr(obj.arrDate)
 
       // 下一月
-      let nextObj = {}
-      nextObj._date = this._getNextDate(obj.arrDate)
-      // 添加最后一天 第一天 日期数组
-      Object.assign(nextObj, this.MExtractObjForDate(nextObj._date))
-      nextObj.numbers = this.MGetNumberOfObj(nextObj)
-      nextObj.weekNo = nextObj.numbers / 7
+      let nextDate = this._getNextDate(obj.arrDate)
+      let nextObj = this.MCreateMonthData(nextDate)
       obj.nextObj = nextObj
 
       // 上一月
-      let lastObj = {}
-      lastObj._date = this._getLastDate(obj.arrDate)
-      // 添加最后一天 第一天 日期数组
-      Object.assign(lastObj, this.MExtractObjForDate(lastObj._date))
-      lastObj.numbers = this.MGetNumberOfObj(lastObj)
-      lastObj.weekNo = lastObj.numbers / 7
+      let lastDate = this._getLastDate(obj.arrDate)
+      let lastObj = this.MCreateMonthData(lastDate)
       obj.lastObj = lastObj
+
       obj.weekNumbers = obj.weekNo + obj.nextObj.weekNo + obj.lastObj.weekNo
       this.MCreateCalendarDateFromType('cu')
       this.MCreateCalendarDateFromType('next')
       this.MCreateCalendarDateFromType('last')
       this.MCompoundCalenders()
-      console.log(this.useData)
     },
 
     MCreateCalendarDateFromType: function (type) {
       let obj
+      let selectDate
       switch (type) {
         case 'cu':
           obj = this.useData
+          selectDate = this.selectDate || this._translateDateFromArr(obj.arrDate)
           break
         case 'next':
           obj = this.useData.nextObj
+          selectDate = this._translateDateFromArr(obj.arrDate)
 
           break
         case 'last':
           obj = this.useData.lastObj
+          selectDate = this._translateDateFromArr(obj.arrDate)
           break
         default:
           obj = this.useData
+          selectDate = this._translateDateFromArr(obj.arrDate)
           break
       }
       obj.calender = getArrCalender.call(this, obj)
-      function getArrCalender (obj) {
+      function getArrCalender(obj) {
         let ArrCalender = this._newArray(obj.numbers)
         var [year, month] = obj.arrDate
         ArrCalender = ArrCalender.map((d, i) => {
+          d = {}
+          d.class = {}
           // 月前空白
           if (i < obj.firstDay.week) {
-            d = {}
-            d.beforeDate = this._translateDateFromIndex([
-              year,
-              month - 1,
-              i + 1 - obj.firstDay.week
-            ])
+            d.date =
+              this._translateDateFromIndex([
+                year,
+                month - 1,
+                i + 1 - obj.firstDay.week
+              ])
+            d.class['before-month'] = 1
           } else if (i >= obj.firstDay.week + obj.endDay._date.getDate()) {
-            d = {}
             let num = i - (obj.firstDay.week + obj.endDay._date.getDate())
-            d.laterDate = this._translateDateFromIndex([
+            d.date = this._translateDateFromIndex([
               year,
               month - 1,
-
               num + 1 + obj.endDay._date.getDate()
             ])
+            d.class['later-month'] = 1
           } else {
-            d = {}
             d.date = this._translateDateFromIndex([
               year,
               month - 1,
               i - obj.firstDay.week + 1
             ])
+            d.class['cu-month'] = 1
+
+            if (d.date - selectDate === 0) {
+              d.class['active'] = 1
+            } else {
+              delete d.class.active
+            }
           }
+          if (this.isToday(d.date)) {
+            d.class['today'] = 1
+          }
+
+          // { 'today': isToday(Object.values(itemDay)[0]) }
+          // d.arrclass = Object.keys(d.class)
           return d
         })
-
         return ArrCalender
       }
+    },
+    _clearHours: function (date) {
+      let dateNumber = date.setHours(0, 0, 0, 0)
+      let newDate = new Date(dateNumber)
+      return newDate
     },
     _newArray: function (a, b) {
       let min, max
@@ -300,35 +315,42 @@ export default {
       }
       return arr
     },
-
+    // 提取arrDate endDay firstDay
     MExtractObjForDate: function (date) {
       let arrDate = this._getArrFromDate(date)
       let endDay = this._getEndDay(arrDate)
       let firstDay = this._getFirstDay(arrDate)
       return { arrDate, endDay, firstDay }
     },
-    CDragstart (e) {
+    CDragstart(e) {
     },
-    CClick (data) {
-      console.log(data)
-      this.selectDate = Object.values(data)[0]
+
+    CClick(data) {
+      if (data.class['cu-month']) {
+        this.selectDate = data.date
+        this.MCreateCalendarDateFromType('cu')
+        this.MCompoundCalenders()
+        // this.$set(this.useData)
+      }
     },
-    isToday (date) {
+    isToday(date) {
       return parseInt((new Date().setHours(0, 0, 0, 0) - date) / this.DAYTIME) + '' === '0'
+    },
+    arrclass: function (data) {
+      return Object.keys(data.class)
     }
+
   },
 
   computed: {
+    // get 选中日期的下标
     numIndexOfSelect: function () {
       let index = 0
-      this.useData.calender.forEach((date, i) => {
-        let time = Object.values(date)[0] - this.selectDate.setHours(0, 0, 0, 0)
-        // console.log(parseInt(time / daytime))
-        console.log(time)
-        index = date.beforeDate ? i + 1 : index
+      this.useData.calender.forEach((data, i) => {
+        let time = data.date - this.selectDate.setHours(0, 0, 0, 0)
+        index = data.class.indexOf('before-month') !== -1 ? i + 1 : index
         index = parseInt(time / this.DAYTIME) === 0 ? i : index
       })
-      console.log(index)
       return index
     },
     cuData: function () {
@@ -425,13 +447,13 @@ export default {
   width: calc(100vw / 7);
   height: calc(100vw / 7);
   display: flex;
+  border-bottom: 1px solid #978e8e;
 }
 
 .calend-day div {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: 1px solid #978e8e;
   flex: 1 1 auto;
 }
 .before-month,
@@ -442,6 +464,7 @@ export default {
 .cu-month {
   /* background: #ec57c8; */
   color: #000000;
+  margin: 10px 0;
 }
 .active {
   background: #00daf9;

@@ -8,8 +8,6 @@ function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
-
-
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
@@ -26,7 +24,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src'),
+      '@': resolve('src')
     }
   },
   module: {
@@ -41,6 +39,15 @@ module.exports = {
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
       },
+      // {
+      //   test: /\.(scss)(\?.*)?$/,
+      //   loader: 'url-loader',
+      //   options: {
+      //     limit: 10000,
+      //     name: utils.assetsPath('img/[name].[hash:7].[ext]')
+      //   }
+
+      // },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
